@@ -128,7 +128,7 @@ def inline_definitions(schema: dict) -> dict:
 
 AWS_REGION = os.getenv("AWS_REGION", os.getenv("AWS_DEFAULT_REGION", "us-east-1"))
 
-if __name__ == "__main__":
+def update_database():
     if now() - last_update() > 60 * 60 * 24:
         print("Updating database...")
         with download_zip(AWS_REGION) as zip:
