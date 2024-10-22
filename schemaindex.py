@@ -1,6 +1,9 @@
 import yaml
 import os
 from fuzzywuzzy import process
+import ell
+
+schemas = None
 
 class SchemaIndex:
     """
@@ -30,6 +33,8 @@ class SchemaIndex:
                         type_name = yaml_content.get('typeName')
                         if type_name:
                             self.type_name_dict[type_name.lower()] = yaml_file
+                            # Also add the type name without the AWS:: prefix
+                            self.type_name_dict[type_name.lower().replace("aws::", "")] = yaml_file
                         else:
                             print(f"No typeName found in {yaml_file}")
                     except yaml.YAMLError as e:
@@ -70,3 +75,15 @@ class SchemaIndex:
                 return f"Error opening {yaml_file}: {e}. Failed to get definition of {type_name}"
         else:
             return f"No schema file found for {type_name}"
+
+def load_schemas():
+    global schemas
+    schemas = SchemaIndex()
+
+@ell.tool()
+def get_cloudformation_schema(
+    type_name: str = ell.Field(description="The type name to get the schema for, e.g. AWS::S3::Bucket but can also be fuzzy such as 's3 bucket'")
+) -> str:
+    if schemas is None:
+        load_schemas()
+    return schemas.get(type_name)
