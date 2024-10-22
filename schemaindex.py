@@ -2,6 +2,7 @@ import yaml
 import os
 from fuzzywuzzy import process
 import ell
+from pydantic import Field
 
 schemas = None
 
@@ -82,8 +83,13 @@ def load_schemas():
 
 @ell.tool()
 def get_cloudformation_schema(
-    type_name: str = ell.Field(description="The type name to get the schema for, e.g. AWS::S3::Bucket but can also be fuzzy such as 's3 bucket'")
+    type_name: str = Field(description="The type name to get the schema for, e.g. AWS::S3::Bucket but can also be fuzzy such as 's3 bucket'")
 ) -> str:
+    """
+    Get the CloudFormation schema for a given type name.
+    The resulting schema is a YAML document.
+    It contains all the properties and descriptions for a given CloudFormation resource type.
+    """
     if schemas is None:
         load_schemas()
     return schemas.get(type_name)
