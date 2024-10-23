@@ -5,6 +5,7 @@ import ell
 from pydantic import Field
 
 schemas = None
+cache = {}
 
 class SchemaIndex:
     """
@@ -69,9 +70,12 @@ class SchemaIndex:
         closest_key = self._closest_key(type_name)
         if closest_key:
             yaml_file = self.type_name_dict[closest_key]
+            if type_name in cache:
+                return cache[type_name]
             try:
                 with open(os.path.join('db', yaml_file), 'r') as file:
-                    return file.read()
+                    cache[type_name] = file.read()
+                    return cache[type_name]
             except IOError as e:
                 return f"Error opening {yaml_file}: {e}. Failed to get definition of {type_name}"
         else:
