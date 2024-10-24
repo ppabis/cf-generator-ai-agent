@@ -4,7 +4,10 @@ CloudFormation Template Generator
 Overview
 --------
 
-This tool is designed to create and modify AWS CloudFormation templates using instructions provided to a Large Language Model (LLM). It allows users to generate new templates or transform existing ones while adhering to specific coding style guidelines.
+This script is designed to create and modify AWS CloudFormation templates using instructions provided to a Large Language Model (LLM). It allows users to generate new templates or transform existing ones while adhering to specific coding style guidelines.
+At first the script downloads official CloudFormation schemas from AWS, transforms them from JSON to YAML removing some unnecessary fields and stores them in the `db` directory.
+
+To control which region you download the schemas from, you can set the `AWS_REGION`/`AWS_DEFAULT_REGION` environment variable (most likely you won't need this).
 
 Features
 --------
@@ -12,6 +15,9 @@ Features
 - **Create New Templates**: Generate CloudFormation templates from scratch based on user-defined instructions.
 - **Modify Existing Templates**: Transform existing templates by applying specified changes.
 - **Style Conformance**: Optionally base the style of generated templates on previously provided sample templates to ensure consistency with company coding standards.
+
+The LLM is given a tool that allows it to load the CloudFormation schema for a given resource type in order to reduce hallucinations, keep up to date with the latest resource types and properties or even expand its knowledge on a specific resource in case it
+was "compressed out" during training.
 
 Usage Instructions
 ------------------
