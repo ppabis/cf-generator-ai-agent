@@ -23,6 +23,13 @@ Usage Instructions
 ------------------
 
 1. **Install Dependencies**: Ensure that all required Python packages are installed. You may need to set up a virtual environment.
+
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
 2. **Run the Tool**:
    Execute the script using Python. You can provide optional arguments to customize its behavior:
 
