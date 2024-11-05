@@ -36,10 +36,15 @@ Usage Instructions
     ```bash
     python main.py --sample <sample_template1.yml>
     python main.py --transform <template_to_transform.yml>
+    python main.py --api bedrock
     ```
 
    - `--sample`: This argument allows you to specify one or more sample YAML files that the tool can use to base the style of the generated template on.
    - `--transform`: This argument specifies a file containing the CloudFormation template that you want to modify.
+   - `--api`: This argument specifies the API to use for LLM inference. Currently supported: `bedrock` and `openai`.
+
+   You should specify the required keys in the environment variables. If you use OpenAI, set `OPENAI_API_KEY` environment variable. If you use Bedrock, configure AWS
+   credentials in any way that is picked up by `boto3` - env variables, `~/.aws/credentials` file or IAM role if you are inside EC2.
 
 3. **Input Instructions**: When prompted, enter the instructions for the template you wish to create or modify. If you are using the `--transform` option, the tool will read the specified template file and then prompt you for the transformation instructions.
     Alternatively, you can pipe instructions directly into the tool using the `cat` command:
