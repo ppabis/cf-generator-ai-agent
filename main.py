@@ -10,6 +10,11 @@ from transformator_agent import TransformatorAgent
 from config import Configuration
 from models import get_model_id, get_choices
 
+def write_template(template, filename: str = None):
+    _filename = filename if filename else f"generated_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.yml"
+    with open(_filename, "w") as f:
+        f.write(template)
+
 if __name__ == "__main__":
     # Update the CloudFormation schema index
     update_database()
@@ -20,6 +25,7 @@ if __name__ == "__main__":
     parser.add_argument('--api', type=str, choices=['bedrock', 'openai'], help='Which API to use for LLM inference (bedrock or openai)', default='openai')
     parser.add_argument('--model', type=str, help=f"Which model to use for creating the template. Available models:\n" + "\n".join(get_choices()), default='mini')
     parser.add_argument('--sample', action='append', help='Sample YAML files to load to base the style on (creation only).\nBe careful with the token limit!', default=[])
+    parser.add_argument('--output', type=str, help='Output file name for the generated template.', default=None)
     parser.add_argument('--transform', type=str, help='Transformation instructions for the generated template.', default=None)
     args = parser.parse_args()
     
@@ -54,11 +60,9 @@ if __name__ == "__main__":
     if args.transform:
         transformator = TransformatorAgent(config)
         transformed_template = transformator.transform_template(instructions, source_template)
-        with open(args.transform, "w") as f:
-            f.write(transformed_template)
+        write_template(transformed_template, args.output)
     else:
         generator = GeneratorAgent(config)
         created_template = generator.create_template(instructions, sample_templates)
-        with open(f"generated_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.yml", "w") as f:
-            f.write(created_template)
+        write_template(created_template, args.output)
     
