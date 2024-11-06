@@ -5,3 +5,4 @@ ell-ai[all]
 fuzzywuzzy
 python-Levenshtein # Recommended but can be unavialable or will need compilation
 boto3
+colorama
